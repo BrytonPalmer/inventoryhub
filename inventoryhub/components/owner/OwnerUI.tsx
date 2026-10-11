@@ -1,4 +1,13 @@
 import React from "react";
+import Link from "next/link";
+
+// Prices are stored in pesos; matches the admin product pages.
+export function formatCurrency(amount: number): string {
+  return `₱${amount.toLocaleString("en-PH", {
+    minimumFractionDigits: 2,
+    maximumFractionDigits: 2,
+  })}`;
+}
 
 type SummaryCardProps = {
   label: string;
@@ -24,13 +33,13 @@ type ReportLinkProps = {
 
 export function ReportLink({ title, description, href, className = "" }: ReportLinkProps) {
   return (
-    <a
+    <Link
       href={href}
       className={`border border-[#E5E5E5] rounded-md px-4 py-4 bg-white hover:bg-[#F9F9F9] transition-colors ${className}`}
     >
       <div className="text-sm font-semibold mb-1">{title}</div>
       <div className="text-xs">{description}</div>
-    </a>
+    </Link>
   );
 }
 
@@ -95,12 +104,13 @@ export function ExportCsvButton<T extends Record<string, unknown>>({
           const cell = value === null || value === undefined ? "" : String(value);
           // Escape quotes and wrap in quotes if the cell has a comma/quote/newline
           const escaped = cell.replace(/"/g, '""');
-          return /[",\n]/.test(cell) ? `"${escaped}"` : escaped;
+          return /[",\r\n]/.test(cell) ? `"${escaped}"` : escaped;
         })
         .join(",")
     );
 
-    const csv = [headers.join(","), ...rows].join("\n");
+    // The BOM tells Excel the file is UTF-8, so ₱ and names like "Peña" display correctly.
+    const csv = "﻿" + [headers.join(","), ...rows].join("\r\n");
     const blob = new Blob([csv], { type: "text/csv;charset=utf-8;" });
     const url = URL.createObjectURL(blob);
     const link = document.createElement("a");

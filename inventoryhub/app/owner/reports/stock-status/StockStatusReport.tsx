@@ -1,14 +1,17 @@
 "use client";
 
-import { useMemo } from "react";
-import { getProducts, getLowStockProducts, getTotalStockValue } from "@/lib/owner-mock-data";
-import { PageHeader, SummaryCard, Th, Td, ExportCsvButton } from "@/components/owner/OwnerUI";
+import type { Product } from "@/lib/owner-data";
+import { PageHeader, SummaryCard, Th, Td, ExportCsvButton, formatCurrency } from "@/components/owner/OwnerUI";
 
-export default function StockStatusReportPage() {
-  const products = useMemo(() => getProducts(), []);
-  const lowStockProducts = useMemo(() => getLowStockProducts(products), [products]);
-  const totalStockValue = useMemo(() => getTotalStockValue(products), [products]);
-
+export default function StockStatusReport({
+  products,
+  lowStockCount,
+  totalStockValue,
+}: {
+  products: Product[];
+  lowStockCount: number;
+  totalStockValue: number;
+}) {
   const exportRows = products.map((p) => ({
     product: p.name,
     sku: p.sku,
@@ -16,7 +19,7 @@ export default function StockStatusReportPage() {
     restockLevel: p.restockLevel,
     unitPrice: p.price,
     stockValue: (p.quantity * p.price).toFixed(2),
-    belowRestockLevel: p.quantity < p.restockLevel ? "Yes" : "No",
+    lowStock: p.isLowStock ? "Yes" : "No",
   }));
 
   return (
@@ -28,8 +31,8 @@ export default function StockStatusReportPage() {
 
       <section className="mb-8 grid grid-cols-1 md:grid-cols-3 gap-6">
         <SummaryCard label="Total Products" value={products.length} />
-        <SummaryCard label="Total Stock Value" value={`$${totalStockValue.toFixed(2)}`} />
-        <SummaryCard label="Below Restock Level" value={lowStockProducts.length} />
+        <SummaryCard label="Total Stock Value" value={formatCurrency(totalStockValue)} />
+        <SummaryCard label="Below Restock Level" value={lowStockCount} />
       </section>
 
       <div className="mb-4 flex justify-end">
@@ -50,19 +53,24 @@ export default function StockStatusReportPage() {
           </thead>
 
           <tbody>
-            {products.map((p) => {
-              const isLow = p.quantity < p.restockLevel;
-              return (
+            {products.length === 0 ? (
+              <tr>
+                <td colSpan={6} className="px-4 py-3 text-sm text-center border-t border-[#E5E5E5]">
+                  No products have been added yet.
+                </td>
+              </tr>
+            ) : (
+              products.map((p) => (
                 <tr key={p.id} className="border-t border-[#E5E5E5]">
                   <Td>{p.name}</Td>
                   <Td>{p.sku}</Td>
-                  <Td className={isLow ? "text-red-600 font-medium" : ""}>{p.quantity}</Td>
+                  <Td className={p.isLowStock ? "text-red-600 font-medium" : ""}>{p.quantity}</Td>
                   <Td>{p.restockLevel}</Td>
-                  <Td>${p.price.toFixed(2)}</Td>
-                  <Td>${(p.quantity * p.price).toFixed(2)}</Td>
+                  <Td>{formatCurrency(p.price)}</Td>
+                  <Td>{formatCurrency(p.quantity * p.price)}</Td>
                 </tr>
-              );
-            })}
+              ))
+            )}
           </tbody>
         </table>
       </div>

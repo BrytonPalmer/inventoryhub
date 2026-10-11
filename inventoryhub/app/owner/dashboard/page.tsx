@@ -1,14 +1,17 @@
 import type { Metadata } from "next";
-import { getProducts, getLowStockProducts, getTotalStockValue } from "@/lib/owner-mock-data";
-import { SummaryCard, ReportLink, Th, Td, PageHeader } from "@/components/owner/OwnerUI";
+import Link from "next/link";
+import { connection } from "next/server";
+import { getProducts, getLowStockProducts, getTotalStockValue } from "@/lib/owner-data";
+import { SummaryCard, ReportLink, Th, Td, PageHeader, formatCurrency } from "@/components/owner/OwnerUI";
 
 export const metadata: Metadata = {
   title: "Owner Dashboard",
   description: "The official dashboard for ownership to manage reports on the store.",
 };
 
-export default function OwnerDashboardPage() {
-  const products = getProducts();
+export default async function OwnerDashboardPage() {
+  await connection();
+  const products = await getProducts();
   const lowStockProducts = getLowStockProducts(products);
   const totalStockValue = getTotalStockValue(products);
 
@@ -22,7 +25,7 @@ export default function OwnerDashboardPage() {
       {/* Summary Cards */}
       <section className="mb-10 grid grid-cols-1 md:grid-cols-3 gap-6">
         <SummaryCard label="Total Products" value={products.length} />
-        <SummaryCard label="Total Stock Value" value={`$${totalStockValue.toFixed(2)}`} />
+        <SummaryCard label="Total Stock Value" value={formatCurrency(totalStockValue)} />
         <SummaryCard label="Low Stock Items" value={lowStockProducts.length} />
       </section>
 
@@ -30,9 +33,9 @@ export default function OwnerDashboardPage() {
       <section className="mb-10">
         <div className="flex items-center justify-between mb-4">
           <h2 className="text-xl font-semibold">Low Stock Preview</h2>
-          <a href="/owner/reports/low-stock" className="text-sm underline hover:no-underline">
+          <Link href="/owner/reports/low-stock" className="text-sm underline hover:no-underline">
             View full report
-          </a>
+          </Link>
         </div>
 
         <div className="border border-[#E5E5E5] rounded-md overflow-hidden">
