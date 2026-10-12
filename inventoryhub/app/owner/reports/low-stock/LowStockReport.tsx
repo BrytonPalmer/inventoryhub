@@ -1,13 +1,15 @@
 "use client";
 
 import { useMemo, useState } from "react";
-import { getProducts, getLowStockProducts } from "@/lib/owner-mock-data";
+import type { Product } from "@/lib/owner-data";
 import { PageHeader, Th, Td, ExportCsvButton } from "@/components/owner/OwnerUI";
 
-export default function LowStockReportPage() {
+export default function LowStockReport({
+  lowStockProducts,
+}: {
+  lowStockProducts: Product[];
+}) {
   const [search, setSearch] = useState("");
-
-  const lowStockProducts = useMemo(() => getLowStockProducts(getProducts()), []);
 
   const filtered = useMemo(() => {
     const term = search.trim().toLowerCase();
