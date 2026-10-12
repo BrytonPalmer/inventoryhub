@@ -1,6 +1,7 @@
 Joseph Peralta
 Bruce Nyeha
 Erandy Ramirez
+Bryton Palmer
 
 InventoryHub: Simple Inventory Management System
 
