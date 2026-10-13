@@ -19,7 +19,7 @@ export const metadata: Metadata = {
   },
   description:
     "A simple web-based inventory management system for small businesses.",
-  metadataBase: new URL("http://localhost:3000"),
+ metadataBase: new URL('https://inventoryhub-nine.vercel.app'),
   openGraph: {
     title: "InventoryHub",
     description: "Track stock, transactions, and reports in one place.",
