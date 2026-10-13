@@ -19,9 +19,13 @@ export const SignUpSchema = z.object({
   role: z.enum(['Employee', 'Admin', 'Owner']),
 });
 
-const JWT_SECRET_KEY = new TextEncoder().encode(
-  process.env.JWT_SECRET || 'fallback-super-secret-key-change-this-in-production'
-);
+const jwtSecret = process.env.JWT_SECRET;
+
+if (!jwtSecret) {
+  throw new Error('JWT_SECRET environment variable is not set');
+}
+
+const JWT_SECRET_KEY = new TextEncoder().encode(jwtSecret);
 
 export async function hashPassword(password: string): Promise<string> {
   const msgUint8 = new TextEncoder().encode(password);
