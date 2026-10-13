@@ -64,7 +64,7 @@ export default async function OwnerDashboardPage() {
                   <tr key={p.id} className="border-t border-[#E5E5E5]">
                     <Td>{p.name}</Td>
                     <Td>{p.sku}</Td>
-                    <Td className="text-red-600 font-medium">{p.quantity}</Td>
+                    <Td className="text-red-800 font-medium">{p.quantity}</Td>
                     <Td>{p.restockLevel}</Td>
                   </tr>
                 ))

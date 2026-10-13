@@ -64,7 +64,7 @@ export default function StockStatusReport({
                 <tr key={p.id} className="border-t border-[#E5E5E5]">
                   <Td>{p.name}</Td>
                   <Td>{p.sku}</Td>
-                  <Td className={p.isLowStock ? "text-red-600 font-medium" : ""}>{p.quantity}</Td>
+                  <Td className={p.isLowStock ? "text-red-800 font-medium" : ""}>{p.quantity}</Td>
                   <Td>{p.restockLevel}</Td>
                   <Td>{formatCurrency(p.price)}</Td>
                   <Td>{formatCurrency(p.quantity * p.price)}</Td>

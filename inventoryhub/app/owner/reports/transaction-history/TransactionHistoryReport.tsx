@@ -144,7 +144,7 @@ export default function TransactionHistoryReport({
                   <Td>{TYPE_LABELS[t.transactionType] ?? t.transactionType}</Td>
                   <Td>{t.previousQuantity}</Td>
                   <Td>{t.newQuantity}</Td>
-                  <Td className={t.quantityChange < 0 ? "text-red-600 font-medium" : "text-green-700 font-medium"}>
+                  <Td className={t.quantityChange < 0 ? "text-red-800 font-medium" : "text-green-700 font-medium"}>
                     {t.quantityChange > 0 ? `+${t.quantityChange}` : t.quantityChange}
                   </Td>
                   <Td>{t.employeeName}</Td>
